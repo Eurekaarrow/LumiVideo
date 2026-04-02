@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LumiVideo: An Intelligent Agentic System for Video Color Grading</title>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"/>
+
     <style>
-        /* 基础样式 */
+        /* ================= 基础样式 ================= */
         body {
             margin: 0;
             padding: 0;
@@ -19,11 +23,11 @@
             font-weight: 700;
         }
 
-        /* 视频 Hero Section 样式 (占满首屏) */
+        /* ================= Hero Section (首屏视频) ================= */
         .hero {
             position: relative;
             width: 100vw;
-            height: 100vh; /* 占满整个视口高度 */
+            height: 100vh;
             overflow: hidden;
             background-color: #000;
         }
@@ -34,19 +38,18 @@
             left: 50%;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 保持视频比例并填满容器，防止拉伸 */
+            object-fit: cover;
             transform: translate(-50%, -50%);
             z-index: 1;
         }
 
-        /* 视频上的文字叠加层 */
         .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* 黑色半透明蒙版，增加文字可读性 */
+            background-color: rgba(0, 0, 0, 0.4);
             z-index: 2;
             display: flex;
             flex-direction: column;
@@ -61,7 +64,7 @@
         .hero-title {
             font-size: 3.5em;
             margin-bottom: 0.2em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* 文字阴影 */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
 
         .hero-authors {
@@ -76,7 +79,7 @@
             opacity: 0.9;
         }
 
-        /* 导航栏 (可选，放在视频下方或固定) */
+        /* ================= 导航栏 ================= */
         .navbar {
             background-color: #f8f9fa;
             padding: 15px 10%;
@@ -84,6 +87,9 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .navbar a {
@@ -97,7 +103,7 @@
             color: #007bff;
         }
 
-        /* 普通内容 Section 样式 */
+        /* ================= 通用 Section 样式 ================= */
         .section {
             padding: 60px 10%;
             max-width: 1200px;
@@ -111,15 +117,15 @@
             color: #2c3e50;
         }
 
-        /* 摘要区样式 */
+        /* Abstract 区 */
         .abstract-p {
             font-size: 1.1em;
-            text-align: justify; /* 两端对齐 */
+            text-align: justify;
             color: #555;
-            text-indent: 2em; /* 首行缩进 */
+            text-indent: 2em;
         }
 
-        /* 方法图区样式 */
+        /* Method 区 */
         .method-container {
             text-align: center;
         }
@@ -139,7 +145,67 @@
             font-style: italic;
         }
 
-        /* BibTeX 页脚样式 */
+        /* ================= Showcase 区 (图片对比滑块) ================= */
+        .showcase-section {
+            padding: 60px 10%;
+            background-color: #fcfcfc;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .comparison-item h3 {
+            text-align: center;
+            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        img-comparison-slider {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            --divider-color: rgba(255, 255, 255, 0.8);
+            --default-handle-opacity: 0.9;
+        }
+
+        /* 修复图片比例变形 */
+        img-comparison-slider img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .label-tag {
+            position: absolute;
+            bottom: 15px;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 0.8em;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .label-left { left: 15px; }
+        .label-right { right: 15px; }
+
+        /* ================= Footer / BibTeX 区 ================= */
         .footer {
             background-color: #2c3e50;
             color: white;
@@ -155,18 +221,19 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.9em;
             text-align: left;
-            display: inline-block; /* 居中 */
+            display: inline-block;
             max-width: 100%;
-            white-space: pre-wrap; /* 保持换行 */
+            white-space: pre-wrap;
+            overflow-x: auto;
         }
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <video autoplay loop muted>
+        <video autoplay loop muted playsinline>
             <source src="results.mp4" type="video/mp4">
-            warning!
+            warning! Your browser does not support HTML5 video.
         </video>
 
         <div class="hero-overlay">
@@ -181,25 +248,98 @@
     <nav class="navbar">
         <a href="#">Home</a>
         <a href="#abstract">Abstract</a>
+        <a href="#showcase">Showcase</a>
         <a href="#method">Method</a>
+        <a href="#results">Results</a>
         <a href="#bibtex">BibTeX</a>
     </nav>
 
     <section id="abstract" class="section">
         <h2 class="section-title">Abstract</h2>
         <p class="abstract-p">
-            Video color grading is a critical post-production process that transforms flat, log-encoded raw footage into emotionally resonant cinematic visuals. Existing automated methods act as static, black-box executors that directly output edited pixels, lacking both interpretability and the iterative control required by professionals. We introduce <strong>LumiVideo</strong>, an agentic system that mimics the cognitive workflow of professional colorists through four stages: Perception, Reasoning, Execution, and Reflection. Given only raw log video, LumiVideo autonomously produces a cinematic base grade by analyzing the scene's physical lighting and semantic content. Its reasoning engine synergizes an LLM's internalized cinematic knowledge with a Retrieval-Augmented Generation (RAG) framework via a Tree of Thoughts (ToT) search to navigate the non-linear color parameter space.
+            Video color grading is a critical post-production process that transforms flat, log-encoded raw footage into emotionally resonant cinematic visuals. Existing automated methods act as static, black-box executors that directly output edited pixels, lacking both interpretability and the iterative control required by professionals. We introduce <strong><em>LumiVideo</em></strong>, an agentic system that mimics the cognitive workflow of professional colorists through four stages: Perception, Reasoning, Execution, and Reflection. Given only raw log video, LumiVideo autonomously produces a cinematic base grade by analyzing the scene's physical lighting and semantic content. Its Reasoning engine synergizes an LLM's internalized cinematic knowledge with a Retrieval-Augmented Generation (RAG) framework via a Tree of Thoughts (ToT) search to navigate the non-linear color parameter space. Rather than generating pixels, the system compiles the deduced parameters into industry-standard ASC-CDL configurations and a globally consistent 3D LUT, analytically guaranteeing temporal consistency. An optional Reflection loop then allows creators to refine the result via natural language feedback. We further introduce <em><strong>LumiGrade</strong></em>, the first log-encoded video benchmark for evaluating automated grading. Experiments show that LumiVideo approaches human expert quality in fully automatic mode while enabling precise iterative control when directed.
         </p>
+    </section>
+
+    <section id="showcase" class="showcase-section">
+        <h2 class="section-title">Showcase</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">Drag the slider to compare the <strong>Original Log</strong> footage with the <strong>LumiVideo LUT</strong> grading.</p>
+
+        <div class="showcase-grid">
+            <div class="comparison-item">
+                <h3>Scenario 1: Sample 1</h3>
+                <img-comparison-slider>
+                    <img slot="first" src="img/sample1_log.png" alt="Log Sample 1" />
+                    <img slot="second" src="img/sample1_lut.png" alt="LUT Sample 1" />
+                    <span slot="first" class="label-tag label-left">Original Log</span>
+                    <span slot="second" class="label-tag label-right">LumiVideo LUT</span>
+                </img-comparison-slider>
+            </div>
+
+            <div class="comparison-item">
+                <h3>Scenario 2: Sample 2</h3>
+                <img-comparison-slider>
+                    <img slot="first" src="img/sample2_log.png" alt="Log Sample 2" />
+                    <img slot="second" src="img/sample2_lut.png" alt="LUT Sample 2" />
+                    <span slot="first" class="label-tag label-left">Original Log</span>
+                    <span slot="second" class="label-tag label-right">LumiVideo LUT</span>
+                </img-comparison-slider>
+            </div>
+
+            <div class="comparison-item">
+                <h3>Scenario 3: Sample 3</h3>
+                <img-comparison-slider>
+                    <img slot="first" src="img/sample3_log.png" alt="Log Sample 3" />
+                    <img slot="second" src="img/sample3_lut.png" alt="LUT Sample 3" />
+                    <span slot="first" class="label-tag label-left">Original Log</span>
+                    <span slot="second" class="label-tag label-right">LumiVideo LUT</span>
+                </img-comparison-slider>
+            </div>
+
+            <div class="comparison-item">
+                <h3>Scenario 4: Sample 4</h3>
+                <img-comparison-slider>
+                    <img slot="first" src="img/sample4_log.png" alt="Log Sample 4" />
+                    <img slot="second" src="img/sample4_lut.png" alt="LUT Sample 4" />
+                    <span slot="first" class="label-tag label-left">Original Log</span>
+                    <span slot="second" class="label-tag label-right">LumiVideo LUT</span>
+                </img-comparison-slider>
+            </div>
+        </div>
     </section>
 
     <section id="method" class="section">
         <h2 class="section-title">Method Overview</h2>
         <div class="method-container">
-            <img src="method_overview.png" alt="LumiVideo Method Overview" class="method-img">
+            <img src="teasar.png" alt="LumiVideo Method Overview" class="method-img">
+            <img src="method.png" alt="LumiVideo Method Overview" class="method-img">
             <p class="method-caption">Figure: Illustration of LumiVideo’s core workflow: Perception of physical/semantic stream, reasoning on parameter generation, execution, and reflection for human-in-the-loop control.</p>
         </div>
     </section>
 
+    <section id="results" class="section" style="background-color: #f8f9fa;">
+        <h2 class="section-title">Experimental Results</h2>
+        <div style="text-align: center; color: #777; padding: 40px; border: 2px dashed #ccc; border-radius: 8px;">
+            <p>Quantitative comparisons and user study results will be added here.</p>
+            </div>
+    </section>
+
+    <!-- <footer id="bibtex" class="footer">
+        <h3>BibTeX Citation</h3>
+        <p style="margin-bottom: 20px;">If you find our work useful, please cite:</p>
+        <div class="bibtex-box">
+@article{guo2026lumivideo,
+  title={LumiVideo: An Intelligent Agentic System for Video Color Grading},
+  author={Guo, Yuchen and Gong, Junli and Cai, Hongmin and Cheung, Yiu-ming and Su, Weifeng},
+  journal={ACM Transactions on Graphics},
+  volume={37},
+  number={4},
+  pages={111},
+  year={2026},
+  publisher={ACM New York, NY, USA},
+  doi={10.1115/nnnnnnn.nnnnnnn}
+}</div>
+    </footer> -->
 
 </body>
 </html>
